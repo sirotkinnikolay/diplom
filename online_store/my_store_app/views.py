@@ -48,12 +48,20 @@ class Login(LoginView):
 
 
 class CategoryView(View):
-    """Формирование списка категорий и путей до изображений этих категорий"""
+    """Формирование списка категорий, популярных товаров,
+     лимитированных, баннеров и путей до изображений этих категорий"""
     def get(self, request):
-        category = CategoryProduct.objects.all()
+        date = CategoryProduct.objects.all()
         file_name_list = []
-        for image in category:
+        for image in date:
             file = os.path.basename(str(image.image))
             file_name_list.append(file)
-        result = zip(category, file_name_list)
-        return render(request, 'index.html', {'categories': result})
+
+        category = zip(date, file_name_list)
+        popular_product = Product.objects.all().order_by('-reviews')[:8]
+        limited_edition = Product.objects.filter(free_delivery=False)
+        banners = Product.objects.all().order_by('-rating')
+        return render(request, 'index.html', {'categories': category,
+                                              'popular_product': popular_product,
+                                              'limited_edition': limited_edition,
+                                              'banners': banners})

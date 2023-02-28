@@ -97,7 +97,7 @@
         </div>
         <div class="wrap">
             <div class="row Header-rowMain">
-                <div class="row-block Header-logo"><a class="logo" href="index.html"><img class="logo-image" src="{% static 'assets/img/logo.png' %}" alt="logo.png" /></a>
+                <div class="row-block Header-logo"><a class="logo" href="/"><img class="logo-image" src="{% static 'assets/img/logo.png' %}" alt="logo.png" /></a>
                 </div>
                 <nav class="row-block row-block_right Header-menu">
                     <div class="menuModal" id="navigate">
@@ -149,8 +149,8 @@
                         <div class="CategoriesButton-content">
                             ================================
                             {% for cat, image in categories %}
-                            <div class="CategoriesButton-link"><a href="#">
-                                    <div class="CategoriesButton-icon"><img src="{% static '{{cat.image}}' %}" alt="{{image}}" />
+                            <div class="CategoriesButton-link"><a href="category/{{cat.id}}">
+                                    <div class="CategoriesButton-icon"><img src="{% static '{{cat.image.url}}' %}" alt="{{image}}" />
                                     </div><span class="CategoriesButton-text">{{cat.title}}</span>
                                 </a>
                             </div>

@@ -9,4 +9,4 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('logout/', AuthorLogoutView.as_view(), name='logout'),
     path('login/', Login.as_view(template_name='login.html'), name='login')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
