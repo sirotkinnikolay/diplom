@@ -7,6 +7,7 @@ from my_store_app.forms import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.models import User
+import os
 
 
 # ====================регистрация и аутентификация =====================================================================
@@ -45,7 +46,14 @@ class Login(LoginView):
 
 # ======================================================================================================================
 
+
 class CategoryView(View):
+    """Формирование списка категорий и путей до изображений этих категорий"""
     def get(self, request):
         category = CategoryProduct.objects.all()
-        return render(request, 'index.html', {'categories': category})
+        file_name_list = []
+        for image in category:
+            file = os.path.basename(str(image.image))
+            file_name_list.append(file)
+        result = zip(category, file_name_list)
+        return render(request, 'index.html', {'categories': result})

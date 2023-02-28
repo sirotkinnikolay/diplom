@@ -49,7 +49,7 @@ class Sales(models.Model):
 
 class CategoryProduct(models.Model):  # категория товаров
     title = models.TextField(max_length=50, verbose_name='название категории')
-    image = models.FileField(upload_to='files/', null=True)
+    image = models.FileField(upload_to='my_store_app/static/', null=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -69,7 +69,7 @@ class Product(models.Model):  # товар
     title = models.TextField(max_length=50, verbose_name='название товара')
     description = models.TextField(max_length=100, verbose_name='описание товара')
     free_delivery = models.BooleanField(default=True)
-    product_picture = models.ImageField(upload_to='files/', null=True)
+    product_picture = models.ImageField(upload_to='my_store_app/static/', null=True)
     rating = models.IntegerField(default=0, verbose_name='счетчик покупок данного товара')
     reviews = models.IntegerField(default=0, verbose_name='счетчик просмотров данного товара')
     tags = models.ManyToManyField('TagsFile', related_name='tags')
