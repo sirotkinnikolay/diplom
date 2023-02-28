@@ -19,7 +19,7 @@ class CategoryProductAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['category', 'specifications', 'price', 'count', 'date',
-                    'title', 'description', 'rating', 'reviews']
+                    'title', 'description', 'rating', 'reviews', 'limited_edition', 'discount', 'limited_offer']
 
     search_fields = ['title']
 

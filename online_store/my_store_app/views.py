@@ -49,19 +49,21 @@ class Login(LoginView):
 
 class CategoryView(View):
     """Формирование списка категорий, популярных товаров,
-     лимитированных, баннеров и путей до изображений этих категорий"""
+     лимитированных, баннеров и путей до изображений этих категорий (index.html)"""
     def get(self, request):
-        date = CategoryProduct.objects.all()
-        file_name_list = []
-        for image in date:
-            file = os.path.basename(str(image.image))
-            file_name_list.append(file)
-
-        category = zip(date, file_name_list)
+        category = CategoryProduct.objects.all()
         popular_product = Product.objects.all().order_by('-reviews')[:8]
-        limited_edition = Product.objects.filter(free_delivery=False)
+        limited_offer = Product.objects.filter(limited_offer=True)[:1]
+        try:
+            discount_price = round(limited_offer[0].price/100 * (100 - limited_offer[0].discount))
+        except ZeroDivisionError:
+            discount_price = limited_offer[0].price
         banners = Product.objects.all().order_by('-rating')
+        limited_edition = Product.objects.filter(limited_edition=True)[:4]
+
         return render(request, 'index.html', {'categories': category,
                                               'popular_product': popular_product,
+                                              'limited_offer': limited_offer,
+                                              'banners': banners,
                                               'limited_edition': limited_edition,
-                                              'banners': banners})
+                                              'discount_price': discount_price})

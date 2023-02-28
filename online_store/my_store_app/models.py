@@ -19,7 +19,7 @@ class Profile(models.Model):
     phone = models.CharField(default='Не указано', max_length=30, verbose_name='номер телефона', blank=True, null=True,
                              unique=True)
     email = models.EmailField(verbose_name='email пользователя', blank=True, unique=True)
-    avatar = models.ImageField(upload_to='catalog/files/', null=True, validators=[validate_image], default='')
+    avatar = models.ImageField(upload_to='static/', null=True, validators=[validate_image], default='')
 
     class Meta:
         verbose_name = 'Профиль'
@@ -49,7 +49,7 @@ class Sales(models.Model):
 
 class CategoryProduct(models.Model):  # категория товаров
     title = models.TextField(max_length=50, verbose_name='название категории')
-    image = models.FileField(upload_to='my_store_app/static/', null=True)
+    image = models.FileField(upload_to='static/', null=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -64,14 +64,16 @@ class Product(models.Model):  # товар
     shop = models.ForeignKey('Shop', on_delete=models.CASCADE, verbose_name='магазин товара')
     specifications = models.ForeignKey('Specifications', on_delete=models.CASCADE, verbose_name='спецификация товара')
     price = models.IntegerField(default=0, verbose_name='цена товара')
+    discount = models.IntegerField(default=0, verbose_name='скидка % ')
     count = models.IntegerField(default=0, verbose_name='количество ')
     date = models.DateField(auto_now_add=True)
     title = models.TextField(max_length=50, verbose_name='название товара')
     description = models.TextField(max_length=100, verbose_name='описание товара')
-    free_delivery = models.BooleanField(default=True)
-    product_picture = models.ImageField(upload_to='my_store_app/static/', null=True)
-    rating = models.IntegerField(default=0, verbose_name='счетчик покупок данного товара')
-    reviews = models.IntegerField(default=0, verbose_name='счетчик просмотров данного товара')
+    limited_offer = models.BooleanField(default=False)
+    limited_edition = models.BooleanField(default=False)
+    product_picture = models.ImageField(upload_to='static/', null=True)
+    rating = models.IntegerField(default=0, verbose_name='счетчик покупок товара')
+    reviews = models.IntegerField(default=0, verbose_name='счетчик просмотров  товара')
     tags = models.ManyToManyField('TagsFile', related_name='tags')
 
     class Meta:
