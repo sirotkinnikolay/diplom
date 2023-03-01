@@ -1,13 +1,15 @@
 from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, UpdateView
 from my_store_app.models import *
 from my_store_app.forms import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.models import User
+from django.db.models import Count
 import os
 
 
@@ -74,6 +76,7 @@ class CategoryView(View):
 
 
 class ProductdView(DetailView):
+    """Страница информации об одном товаре"""
     model = Product
     template_name = 'product.html'
 
@@ -90,3 +93,56 @@ class ProductdView(DetailView):
         context['files'] = picture_list
         context['specif'] = specification_list
         return context
+
+
+class AccountView(DetailView):
+    model = Profile
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AccountView, self).get_context_data(**kwargs)
+        return context
+
+
+class AccountUpdateView(View):
+    """Изменение данных пользователя через форму на странице profile.html"""
+
+    def post(self, request):
+        user = Profile.objects.get(id=request.user.id)
+        user_auth = User.objects.get(id=request.user.id)
+        user_auth.first_name = request.POST['name']
+        user_auth.email = request.POST['mail']
+        user.phone = request.POST['phone']
+        user.full_name = request.POST['name']
+        user.email = request.POST['mail']
+
+        if request.POST['password'] == request.POST['passwordReply']:
+            user_auth.set_password(str(request.POST['password']))
+        user.save()
+        user_auth.save()
+        return redirect('/')
+
+
+class CatalogView(View):
+    """Вывод каталога товаров и функция упорядочивания вывода, фильтрация"""
+    def get(self, request):
+        sort_flag = int(request.GET['q'])
+        if sort_flag == 1:
+            products = Product.objects.all().order_by('-reviews')
+        elif sort_flag == 2:
+            products = Product.objects.all().order_by('price')
+        elif sort_flag == 3:
+            products = Product.objects.all().order_by('-feedback')
+            print('отзывы')
+        elif sort_flag == 4:
+            products = Product.objects.all().order_by('-date')
+        else:
+            products = Product.objects.all()
+        tags_list = []
+        for i in products:
+            for n in i.tags.all():
+                if n.tags_name not in tags_list:
+                    tags_list.append(n.tags_name)
+        return render(request, 'catalog.html', {'products': products, 'tags': tags_list})
+
+

@@ -105,7 +105,7 @@
                         <ul class="menu menu_main">
                             <li class="menu-item"><a class="menu-link" href="/">Главная</a>
                             </li>
-                            <li class="menu-item"><span class="menu-label menu-label_success">Скидки</span><a class="menu-link" href="catalog.html">Каталог</a>
+                            <li class="menu-item"><span class="menu-label menu-label_success">Скидки</span><a class="menu-link" href="/catalog/?q=0">Каталог</a>
                             </li>
                             <li class="menu-item"><a class="menu-link" href="comparison.html">Сравнение</a>
                             </li>
@@ -118,7 +118,7 @@
                         <div class="dropdown">
                             <button class="dropbtn"><img class="CartBlock-img" src="{% static 'assets/img/icons/loon-icon.svg' %}" alt="loon-icon.svg" /></button>
                             <div class="dropdown-content">
-                                <a class="dropdown-content-a" href="account.html">Личный кабинет</a>
+                                <a class="dropdown-content-a" href="/account/{{user.id}}/">Личный кабинет </a>
                                 <a class="dropdown-content-a" href="account.html">Административный раздел</a>
                                 <a class="dropdown-content-a" href="/logout/">Выход</a>
                             </div>
@@ -152,9 +152,6 @@
                             </div>
                         </div>
                         <div class="CategoriesButton-content">
-
-
-
                             {% for cat in categories %}
                             <div class="CategoriesButton-link"><a href="category/{{cat.id}}">
                                     <div class="CategoriesButton-icon"><img src="{{cat.image.url}}"></div>
@@ -182,11 +179,9 @@
                 </div>
                 <div class="Header-searchLink"><img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg" />
                 </div>
-
-
                 <div class="Header-search">
                     <div class="search">
-                        <form class="form form_search" action="/" method="post">
+                        <form class="form form_search" action="#" method="post">
                             {% csrf_token %}
                             <input class="search-input" id="query" name="query" type="text" placeholder="NVIDIA GeForce RTX 3060" />
                             <button class="search-button" type="submit" name="search" id="search"><img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg" />Поиск
@@ -215,7 +210,7 @@
                     <ul class="menu menu_vt Footer-menu">
                         <li class="menu-item"><a class="menu-link" href="/">Главная</a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="/">Каталог</a>
+                        <li class="menu-item"><a class="menu-link" href="/catalog/?q=0">Каталог</a>
                         </li>
                         <li class="menu-item"><a class="menu-link" href="comparison.html">Сравнение</a>
                         </li>

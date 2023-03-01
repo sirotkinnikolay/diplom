@@ -74,6 +74,7 @@ class Product(models.Model):  # товар
     rating = models.IntegerField(default=0, verbose_name='счетчик покупок товара')
     reviews = models.IntegerField(default=0, verbose_name='счетчик просмотров  товара')
     tags = models.ManyToManyField('TagsFile', related_name='tags')
+    feedback = models.IntegerField(default=0, verbose_name='счетчик комментариев')
 
     class Meta:
         verbose_name = 'Товар'
@@ -110,7 +111,7 @@ class Shop(models.Model):
         return self.shop_name
 
 
-class Reviews(models.Model):  # отзыв
+class Feedback(models.Model):  # отзыв
     product = models.ForeignKey('Product', on_delete=models.CASCADE, verbose_name='товар',
                                 related_name='product_title_product_set')
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='пользователь')
@@ -123,6 +124,15 @@ class Reviews(models.Model):  # отзыв
 
     def __str__(self):
         return self.text
+
+
+@receiver(post_save, sender=Feedback)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        product = Product.objects.get(id=instance.product_id)
+        print('сщздали коммент')
+        product.feedback += 1
+        product.save()
 
 
 class Specifications(models.Model):

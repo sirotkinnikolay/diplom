@@ -29,7 +29,7 @@ class SpecInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['category', 'price', 'count', 'date',
-                    'title', 'description', 'rating', 'reviews', 'limited_edition', 'discount', 'limited_offer']
+                    'title', 'description', 'rating', 'reviews', 'limited_edition', 'discount', 'limited_offer', 'feedback']
 
     search_fields = ['title']
     inlines = [FilesInline, SpecInline, ]
@@ -40,7 +40,7 @@ class TagsAdmin(admin.ModelAdmin):
     search_fields = ['tags_name']
 
 
-class ReviewsAdmin(admin.ModelAdmin):
+class FeedbackAdmin(admin.ModelAdmin):
     list_display = ['text', 'product', 'author', 'create_at']
     search_fields = ['author']
 
@@ -81,7 +81,7 @@ admin.site.register(Profile, UserProfileAdmin)
 admin.site.register(CategoryProduct, CategoryProductAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Basket, BasketAdmin)
-admin.site.register(Reviews, ReviewsAdmin)
+admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(TagsFile, TagsAdmin)
 admin.site.register(Specifications, SpecificationsAdmin)
 admin.site.register(OrderHistory, OrderHistoryAdmin)
