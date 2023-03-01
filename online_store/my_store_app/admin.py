@@ -3,7 +3,7 @@ from my_store_app.models import *
 
 
 class SalesAdmin(admin.ModelAdmin):
-    list_display = ['product', 'shop', 'count', 'dateFrom', 'dateTo']
+    list_display = ['product', 'shop', 'count', 'dateTo']
     search_fields = ['product']
 
 
@@ -45,11 +45,6 @@ class FeedbackAdmin(admin.ModelAdmin):
     search_fields = ['author']
 
 
-class SpecificationsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'value']
-    search_fields = ['name']
-
-
 class OrderHistoryAdmin(admin.ModelAdmin):
     list_display = ['user_order', 'product_order', 'payment_date',
                     'delivery_type', 'payment_type', 'total_cost', 'status', 'city', 'address']
@@ -65,6 +60,8 @@ class OrderAdmin(admin.ModelAdmin):
 class BasketAdmin(admin.ModelAdmin):
     list_display = ['username', 'create_at']
     search_fields = ['username']
+
+
 
 
 class PaymentAdmin(admin.ModelAdmin):
@@ -83,7 +80,6 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Basket, BasketAdmin)
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(TagsFile, TagsAdmin)
-admin.site.register(Specifications, SpecificationsAdmin)
 admin.site.register(OrderHistory, OrderHistoryAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Payment, PaymentAdmin)

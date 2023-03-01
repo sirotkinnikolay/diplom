@@ -19,7 +19,7 @@ class Profile(models.Model):
     phone = models.CharField(default='Не указано', max_length=30, verbose_name='номер телефона', blank=True, null=True,
                              unique=True)
     email = models.EmailField(verbose_name='email пользователя', blank=True, unique=True)
-    avatar = models.ImageField(upload_to='static/', null=True, validators=[validate_image], default='')
+    avatar = models.ImageField(upload_to='static/', default='static/image_no_icon_216618.png', null=True, validators=[validate_image])
 
     class Meta:
         verbose_name = 'Профиль'
@@ -39,8 +39,8 @@ class Sales(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, verbose_name='товар')
     shop = models.ForeignKey('Shop', on_delete=models.CASCADE, verbose_name='магазин')
     count = models.IntegerField(default=0, verbose_name='количество товара по скидке')
-    dateFrom = models.DateField()
-    dateTo = models.DateField()
+    dateFrom = models.DateField(auto_now_add=True)
+    dateTo = models.DateField( verbose_name='акция действует до')
 
     class Meta:
         verbose_name = 'Распродажа'

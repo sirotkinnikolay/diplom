@@ -11,6 +11,7 @@ from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.models import User
 from django.db.models import Count
 import os
+import datetime
 
 
 # ====================регистрация и аутентификация =====================================================================
@@ -96,12 +97,15 @@ class ProductdView(DetailView):
 
 
 class AccountView(DetailView):
+    """Страница информации о пользователе"""
     model = Profile
     template_name = 'profile.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(AccountView, self).get_context_data(**kwargs)
-        return context
+
+class UserOfficeView(DetailView):
+    """Личный кабинет пользователя с заказами"""
+    model = Profile
+    template_name = 'account.html'
 
 
 class AccountUpdateView(View):
@@ -116,6 +120,9 @@ class AccountUpdateView(View):
         user.full_name = request.POST['name']
         user.email = request.POST['mail']
 
+        if request.POST['password'] == '' or request.POST['passwordReply'] == '':
+            return redirect('/')
+
         if request.POST['password'] == request.POST['passwordReply']:
             user_auth.set_password(str(request.POST['password']))
         user.save()
@@ -125,6 +132,7 @@ class AccountUpdateView(View):
 
 class CatalogView(View):
     """Вывод каталога товаров и функция упорядочивания вывода, фильтрация"""
+
     def get(self, request):
         sort_flag = int(request.GET['q'])
         if sort_flag == 1:
@@ -145,4 +153,30 @@ class CatalogView(View):
                     tags_list.append(n.tags_name)
         return render(request, 'catalog.html', {'products': products, 'tags': tags_list})
 
+
+class AboutView(View):
+    """Страница информации о магазине"""
+
+    def get(self, request):
+        product_0 = Product.objects.all()[0]
+        product_1 = Product.objects.all()[1]
+        return render(request, 'about.html', {'product_0': product_0, 'product_1': product_1})
+
+
+class SaleView(View):
+    """Страница распродажи товаров"""
+
+    def get(self, request):
+        sal_products = Sales.objects.all()
+        for limit in sal_products:
+            if limit.dateTo <= datetime.datetime.now().date():
+                Sales.objects.filter(id=limit.id).delete()
+        return render(request, 'sale.html', {'sal_products': sal_products})
+
+
+class CartView(View):
+    def get(self, request):
+        print(request.user.id)
+        cart = Basket.objects.all()
+        return render(request, 'cart.html', {'cart': cart})
 

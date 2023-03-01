@@ -74,7 +74,7 @@
                     <div class="Cards">
 
                         {% for prod in products%}
-                        <div class="Card"><a class="Card-picture" href="product/{{prod.id}}"><img src="{{prod.product_picture.url}}"></a>
+                        <div class="Card"><a class="Card-picture" href="/product/{{prod.id}}/"><img src="{{prod.product_picture.url}}"></a>
                             <div class="Card-content">
                                 <strong class="Card-title"><a href="product/{{prod.id}}">{{prod.title}}</a>
                                 </strong>
