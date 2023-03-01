@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import DetailView, ListView
 from my_store_app.models import *
 from my_store_app.forms import *
 from django.contrib.auth import authenticate, login
@@ -41,8 +42,10 @@ class AuthorLogoutView(LogoutView):  # +
 
 class Login(LoginView):
     """Вход в учетную запись"""
+
     def form_valid(self, form):
         return super().form_valid(form)
+
 
 # ======================================================================================================================
 
@@ -50,12 +53,13 @@ class Login(LoginView):
 class CategoryView(View):
     """Формирование списка категорий, популярных товаров,
      лимитированных, баннеров и путей до изображений этих категорий (index.html)"""
+
     def get(self, request):
         category = CategoryProduct.objects.all()
         popular_product = Product.objects.all().order_by('-reviews')[:8]
         limited_offer = Product.objects.filter(limited_offer=True)[:1]
         try:
-            discount_price = round(limited_offer[0].price/100 * (100 - limited_offer[0].discount))
+            discount_price = round(limited_offer[0].price / 100 * (100 - limited_offer[0].discount))
         except ZeroDivisionError:
             discount_price = limited_offer[0].price
         banners = Product.objects.all().order_by('-rating')
@@ -67,3 +71,22 @@ class CategoryView(View):
                                               'banners': banners,
                                               'limited_edition': limited_edition,
                                               'discount_price': discount_price})
+
+
+class ProductdView(DetailView):
+    model = Product
+    template_name = 'product.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductdView, self).get_context_data(**kwargs)
+        tags_list = []
+        picture_list = Files.objects.filter(product_id=self.kwargs['pk'])[:3]
+        specification_list = Specifications.objects.filter(specifications_id=self.kwargs['pk'])
+
+        for i in Product.objects.filter(id=self.kwargs['pk']):
+            for n in i.tags.all():
+                tags_list.append(n.tags_name)
+        context['tags'] = tags_list
+        context['files'] = picture_list
+        context['specif'] = specification_list
+        return context

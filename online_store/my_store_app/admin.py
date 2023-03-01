@@ -17,11 +17,22 @@ class CategoryProductAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
+class FilesInline(admin.TabularInline):
+    fk_name = 'product'
+    model = Files
+
+
+class SpecInline(admin.TabularInline):
+    fk_name = 'specifications'
+    model = Specifications
+
+
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['category', 'specifications', 'price', 'count', 'date',
+    list_display = ['category', 'price', 'count', 'date',
                     'title', 'description', 'rating', 'reviews', 'limited_edition', 'discount', 'limited_offer']
 
     search_fields = ['title']
+    inlines = [FilesInline, SpecInline, ]
 
 
 class TagsAdmin(admin.ModelAdmin):

@@ -62,7 +62,6 @@ class CategoryProduct(models.Model):  # категория товаров
 class Product(models.Model):  # товар
     category = models.ForeignKey('CategoryProduct', on_delete=models.CASCADE, verbose_name='категория товара')
     shop = models.ForeignKey('Shop', on_delete=models.CASCADE, verbose_name='магазин товара')
-    specifications = models.ForeignKey('Specifications', on_delete=models.CASCADE, verbose_name='спецификация товара')
     price = models.IntegerField(default=0, verbose_name='цена товара')
     discount = models.IntegerField(default=0, verbose_name='скидка % ')
     count = models.IntegerField(default=0, verbose_name='количество ')
@@ -82,6 +81,11 @@ class Product(models.Model):  # товар
 
     def __str__(self):
         return self.title
+
+
+class Files(models.Model):
+    product = models.ForeignKey('Product', default=None, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='static/')
 
 
 class TagsFile(models.Model):
@@ -122,6 +126,7 @@ class Reviews(models.Model):  # отзыв
 
 
 class Specifications(models.Model):
+    specifications = models.ForeignKey('Product', on_delete=models.CASCADE, verbose_name='товар')
     name = models.TextField(max_length=50, verbose_name='название')
     value = models.TextField(max_length=50, verbose_name='значение')
 
