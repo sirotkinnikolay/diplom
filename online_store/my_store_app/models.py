@@ -13,7 +13,7 @@ class Profile(models.Model):
             raise ValidationError("Максимальный размер файла {}MB".format(str(megabyte_limit)))
 
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, related_name='profile')
-    username = models.CharField(default='-------', max_length=50,
+    username = models.CharField(default='No name', max_length=50,
                                 verbose_name='username', blank=True, null=True)
     full_name = models.CharField(default='не указано', max_length=50, verbose_name='ФИО пользователя', blank=True)
     phone = models.CharField(default='Не указано', max_length=30, verbose_name='номер телефона', blank=True, null=True,
@@ -184,12 +184,18 @@ class Order(models.Model):  # покупка товаров из корзины
 
 class Basket(models.Model):  # корзина пользователя
     username = models.OneToOneField(Profile, unique=True, on_delete=models.CASCADE, related_name='profile')
-    product = models.ManyToManyField('Product', related_name='product')
+    product = models.ManyToManyField('Product', related_name='product', through='Enrollment')
     create_at = models.DateField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
+
+
+class Enrollment(models.Model):
+    basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_count = models.IntegerField(default=0, verbose_name='кол-во товаров')
 
 
 class Payment(models.Model):

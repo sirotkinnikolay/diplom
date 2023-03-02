@@ -175,8 +175,26 @@ class SaleView(View):
 
 
 class CartView(View):
+    """Корзина пользователя, изменение количества товара"""
+
     def get(self, request):
-        print(request.user.id)
-        cart = Basket.objects.all()
+        user_pr = Profile.objects.get(id=request.user.id)  # получаю профиль пользователя
+        bask = Basket.objects.get(username=user_pr)  # получаю его корзину
+        cart_user = bask.product.all()  # продукты в корзине
+        enroll = Enrollment.objects.filter(basket_id=bask.id)  # промежуточные записи
+        cart = zip(cart_user, enroll)
+
         return render(request, 'cart.html', {'cart': cart})
 
+
+class CartDeleteProductView(View):
+    def get(self, request):
+        sort_flag = request.GET['q']
+        answer = sort_flag.split('-')
+        if answer[0] == "del":
+            user_pr = Profile.objects.get(id=request.user.id)  # получаю профиль пользователя
+            bask = Basket.objects.get(username=user_pr)  # получаю его корзину
+            Enrollment.objects.get(basket_id=bask.id,
+                                   product_id=answer[1]).delete()  # по id корзины и товара удаляю запись
+
+        return redirect('/cart/')
